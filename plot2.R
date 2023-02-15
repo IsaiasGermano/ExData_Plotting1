@@ -1,0 +1,22 @@
+hhpc <- read.table('household_power_consumption.txt', header = TRUE, sep = ';',
+                   stringsAsFactors = FALSE)
+
+hhpc$DateTime <- strptime(paste(hhpc$Date, hhpc$Time), format="%d/%m/%Y %H:%M:%S")
+
+if(!require(lubridate)){
+    install.packages("lubridate")
+    library(lubridate)
+}
+
+hhpc$Date <- dmy(hhpc$Date)
+
+df <- hhpc[hhpc$Date >= "2007-02-01" & hhpc$Date <= "2007-02-02",]
+
+df$Global_active_power <- as.numeric(df$Global_active_power)
+
+plot(df$DateTime, df$Global_active_power, type = "l",
+     ylab = "Global Active Power (killowats)", xlab = '')
+
+dev.copy(png, file = "plot2.png")
+
+dev.off()
